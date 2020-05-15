@@ -23,10 +23,11 @@ from utils import label_map_util
 
 from utils import visualization_utils as vis_util
 
-def wordable(video_path, video_id, video_title) :
 
+def wordable(video_path, video_id, video_title):
     # 라벨 파일 불러오기
-    PATH_TO_LABELS = os.path.join('uploads//core//tensorflow//models//research//object_detection//data', 'mscoco_label_map.pbtxt')
+    PATH_TO_LABELS = os.path.join('uploads//core//tensorflow//models//research//object_detection//data',
+                                  'mscoco_label_map.pbtxt')
 
     NUM_CLASSES = 90
 
@@ -47,9 +48,9 @@ def wordable(video_path, video_id, video_title) :
 
     print(",,")
 
-    #form_class = uic.loadUiType("main.ui")[0]
+    # form_class = uic.loadUiType("main.ui")[0]
 
-    #form_class2 = uic.loadUiType("frame set.ui")[0]
+    # form_class2 = uic.loadUiType("frame set.ui")[0]
 
     global temp
     temp = '1'
@@ -58,13 +59,11 @@ def wordable(video_path, video_id, video_title) :
     def slash_to_double_backslash(s):
         return s.replace('/', '\\')
 
-
     # 카테고리 딕셔너리에서 id를 찾아내는 함수
     def categories_id(n):
         for i in range(0, 80):
             if categories[i]['id'] == n:
                 return i
-
 
     # 데이터 베이스 인풋 함수
     def input_data(video_num, object_num, time):
@@ -87,6 +86,7 @@ def wordable(video_path, video_id, video_title) :
         return
 
         # 데이터 베이스에서 검색하는 함수
+
     def do_search_object():
         global curs
         v = self.lineEdit.text()
@@ -97,7 +97,7 @@ def wordable(video_path, video_id, video_title) :
 
         row_counter = 0
 
-            #출력
+        # 출력
         for row in rows:
             l = row[0]
             m = row[1]
@@ -128,11 +128,11 @@ def wordable(video_path, video_id, video_title) :
 
         curs.execute('DROP TABLE IF EXISTS vd')
         curs.execute('CREATE TABLE vd(vdnum ,object, time)')
-    
-    def get_filename(filename) :
-        
+
+    def get_filename(filename):
+
         a = slash_to_double_backslash(filename)
-        b = a        
+        b = a
         while True:
             a = b
             try:
@@ -143,9 +143,9 @@ def wordable(video_path, video_id, video_title) :
             print(b)
         filename = b
         return filename
-        
 
         # 동영상 분석 함수
+
     def do_scan():
         global frame_num
         frame_num = 3
@@ -153,8 +153,8 @@ def wordable(video_path, video_id, video_title) :
         filename = "ssd_mobilenet_v1_coco_2018_01_28.tar.gz"
         global foldername
         global show_analysis_video
-        #global video_path
-        #video_path = "/workspace/builderschallenge/simple-file-upload-master/media/1.mp4"
+        # global video_path
+        # video_path = "/workspace/builderschallenge/simple-file-upload-master/media/1.mp4"
 
         MODEL_NAME = filename  # 선택한 모델파일을 불러옴
         MODEL_FILE = MODEL_NAME  # + '.tar.gz'
@@ -163,8 +163,8 @@ def wordable(video_path, video_id, video_title) :
         PATH_TO_CKPT = MODEL_NAME.rstrip('.tar.gz') + '/frozen_inference_graph.pb'
 
         opener = urllib.request.URLopener()
-        #DOWNLOAD_BASE = 'http://download.tensorflow.org/models/object_detection/'
-        #opener.retrieve(DOWNLOAD_BASE + MODEL_FILE, MODEL_FILE)
+        # DOWNLOAD_BASE = 'http://download.tensorflow.org/models/object_detection/'
+        # opener.retrieve(DOWNLOAD_BASE + MODEL_FILE, MODEL_FILE)
         tar_file = tarfile.open(MODEL_FILE)
         for file in tar_file.getmembers():
             file_name = os.path.basename(file.name)
@@ -180,27 +180,25 @@ def wordable(video_path, video_id, video_title) :
                 od_graph_def.ParseFromString(serialized_graph)
                 tf.import_graph_def(od_graph_def, name='')
 
-        print(frame_num)                
+        print(frame_num)
 
         cnt = 0
 
-            # 동영상 갯수만큼 반복
-            
+        # 동영상 갯수만큼 반복
 
         cap = cv2.VideoCapture(video_path)
 
-                # 총 프레임수와 초당 프레임 계산
+        # 총 프레임수와 초당 프레임 계산
         print(cap.get(cv2.CAP_PROP_FPS))
         fps = cap.get(cv2.CAP_PROP_FPS)
         frameCount = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-        duration = frameCount / fps
 
         with detection_graph.as_default():
             with tf.Session(graph=detection_graph) as sess:
 
                 ret = True
 
-                    # ret,image_np=cap.read()
+                # ret,image_np=cap.read()
                 cnt2 = 0
 
                 objects = list()
@@ -215,19 +213,19 @@ def wordable(video_path, video_id, video_title) :
 
                     if cnt2 % int(frame_num) == 0:  # 분석해야할 프레임이면 분석
                         try:
-                                    # Definite input and output Tensors for detection_graph
+                            # Definite input and output Tensors for detection_graph
                             image_tensor = detection_graph.get_tensor_by_name('image_tensor:0')
-                                   # Each box represents a part of the image where a particular object was detected.
+                            # Each box represents a part of the image where a particular object was detected.
                             detection_boxes = detection_graph.get_tensor_by_name('detection_boxes:0')
-                                    # Each score represent how level of confidence for each of the objects.
-                                    # Score is shown on the result image, together with the class label.
+                            # Each score represent how level of confidence for each of the objects.
+                            # Score is shown on the result image, together with the class label.
                             detection_scores = detection_graph.get_tensor_by_name('detection_scores:0')
                             detection_classes = detection_graph.get_tensor_by_name('detection_classes:0')
                             num_detections = detection_graph.get_tensor_by_name('num_detections:0')
 
-                                # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
+                            # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
                             image_np_expanded = np.expand_dims(image_np, axis=0)
-                                    # Actual detection.
+                            # Actual detection.
                             (boxes, scores, classes, num) = sess.run(
                                 [detection_boxes, detection_scores, detection_classes, num_detections],
                                 feed_dict={image_tensor: image_np_expanded})
@@ -252,11 +250,11 @@ def wordable(video_path, video_id, video_title) :
                                 np.squeeze(scores),
                                 category_index,
                                 use_normalized_coordinates=True,
-                                 line_thickness=3)
+                                line_thickness=3)
 
-                                    #cv2.imshow('live_detection', image_np)  # 분석 프레임 보여주기
+                            # cv2.imshow('live_detection', image_np)  # 분석 프레임 보여주기
 
-                                # 동영상이 끝날때
+                            # 동영상이 끝날때
                         except:
                             cv2.destroyAllWindows()
                             print("except")
@@ -270,11 +268,11 @@ def wordable(video_path, video_id, video_title) :
                 # cv2.destroyAllWindows()
                 # print("ghjk")
         cap.release()
-        
-        #filename = get_filename(video_path)
-                # 데이터 베이스에 저장
+
+        # filename = get_filename(video_path)
+        # 데이터 베이스에 저장
         for i in range(1, cnt):
-                # print("789")
+            # print("789")
             input_data(video_id, objects[i], video_title)
 
         cnt = 0
@@ -283,4 +281,4 @@ def wordable(video_path, video_id, video_title) :
     do_scan()
     return
 
-#wordable('/workspace/builderschallenge/simple-file-upload-master/media/1.mp4')
+# wordable('/workspace/builderschallenge/simple-file-upload-master/media/1.mp4')
