@@ -1,4 +1,4 @@
-'{% load staticfiles %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -113,7 +113,7 @@
                     <div class="font-icon-list col-lg-2 col-md-3 col-sm-4 col-xs-6 col-xs-6">
                       <div class="font-icon-detail-video">
                         <video src="/media/documents/{{ document.pk }}.mp4"width='250' height= '170' controls></video>
-                        <P></P>
+                        <p></p>
                         <a href="/details/{{ document.pk }}#" style="color:black;">{{ document.title }}</a>
                       </div>
                     </div>
@@ -183,6 +183,7 @@ function myFunction() {
     }
   }
 }
+
 </script>
     
   <script>
