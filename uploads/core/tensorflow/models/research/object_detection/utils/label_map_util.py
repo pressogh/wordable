@@ -23,7 +23,11 @@ import logging
 from six.moves import range
 import tensorflow as tf
 from google.protobuf import text_format
-from object_detection.protos import string_int_label_map_pb2
+import sys
+
+sys.path.insert(0, './uploads/core/tensorflow/models/research/object_detection/protos')
+
+import string_int_label_map_pb2
 
 
 def _validate_label_map(label_map):
